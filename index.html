@@ -439,13 +439,13 @@ img { max-width: 100%; display: block; }
 /* Dynamic Island */
 .dynamic-island {
   position: absolute;
-  top: 11px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 36px;
-  background: #1A1A1E;
-  border-radius: 20px;
+  width: 92px;
+  height: 26px;
+  background: #000000;
+  border-radius: 14px;
   z-index: 10;
   box-shadow: 0 0 0 0.5px rgba(0,0,0,0.5);
 }
@@ -453,28 +453,28 @@ img { max-width: 100%; display: block; }
   content: '';
   position: absolute;
   top: 50%;
-  right: 24px;
+  right: 18px;
   transform: translateY(-50%);
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, #2A2A35 0%, #1A1A1E 100%);
-  box-shadow: inset 0 0 2px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.05);
+  background: radial-gradient(circle at 40% 40%, #1A1A2E 0%, #000 100%);
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.8), 0 0 1px rgba(255,255,255,0.03);
 }
 
-/* iOS Status Bar */
+/* iOS Status Bar — sits in the "ears" beside Dynamic Island */
 .ios-statusbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 24px 0;
-  height: 54px;
+  padding: 13px 20px 0;
+  height: 48px;
   position: relative;
   z-index: 5;
 }
 .ios-statusbar-time {
   font-family: -apple-system, 'SF Pro Display', sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #1A1A1A;
   letter-spacing: 0.2px;
@@ -482,10 +482,11 @@ img { max-width: 100%; display: block; }
 .ios-statusbar-icons {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 .ios-statusbar-icons svg {
   display: block;
+  transform: scale(0.85);
 }
 
 /* Side buttons */
