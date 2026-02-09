@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destek - Ciral</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #FFF8F6;
+            --bg-secondary: #FFE5DF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #5A5A5A;
+            --accent: #D32F2F;
+            --accent-hover: #B71C1C;
+        }
+
+        body {
+            font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #FFE5DF, #FFF8F6 30%, #FFFFFF);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 248, 246, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 1.5rem 2rem;
+            z-index: 100;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        nav .logo:hover {
+            opacity: 0.7;
+        }
+
+        nav .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .support-card {
+            background: #FFE5DF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .support-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(245, 240, 235, 0.2);
+        }
+
+        .support-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .support-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .support-card a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .support-card a:hover {
+            color: var(--accent-hover);
+        }
+
+        .faq-section {
+            margin-bottom: 4rem;
+        }
+
+        .faq-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .faq-item {
+            background: #FFE5DF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item h3 {
+            font-size: 1.35rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .faq-item p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item ul {
+            padding-left: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-item li {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .faq-item strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .contact-section {
+            background: #FFE5DF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .contact-section p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .contact-email {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .contact-email:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .response-time {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .response-time p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        footer {
+            background: #FFE5DF;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        footer .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        footer h4 {
+            font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        footer a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--text-primary);
+        }
+
+        footer .copyright {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            nav .logo {
+                font-size: 1.5rem;
+            }
+
+            main {
+                padding: 2rem 1.5rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .support-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-section h2 {
+                font-size: 2rem;
+            }
+
+            .contact-section {
+                padding: 2rem;
+            }
+
+            footer .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo"><img src="logo.png" alt="Ciral" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:6px;">Ciral</a>
+            <a href="index.html" class="nav-link">Ana Sayfa</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h1>Destek Merkezi</h1>
+            <p>Ciral ile ilgili sorularınız için buradayız. Aşağıdaki sık sorulan sorulara göz atın veya bizimle iletişime geçin.</p>
+        </div>
+
+        <div class="support-grid">
+            <div class="support-card">
+                <h3>Hızlı Başlangıç</h3>
+                <p>Uygulamayı yeni mi indirdiniz? İlk alışkanlığınızı oluşturma ve AI desteği alma hakkında rehberimize göz atın.</p>
+                <a href="#baslangic">Başlangıç Rehberi →</a>
+            </div>
+            <div class="support-card">
+                <h3>Abonelik Yardımı</h3>
+                <p>Premium özelliklere erişim, abonelik yönetimi ve faturalandırma hakkında bilgi alın.</p>
+                <a href="#abonelik">Abonelik SSS →</a>
+            </div>
+            <div class="support-card">
+                <h3>Teknik Sorunlar</h3>
+                <p>Uygulama hatası, senkronizasyon sorunları veya diğer teknik konular için yardım alın.</p>
+                <a href="#teknik">Teknik Destek →</a>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Sık Sorulan Sorular</h2>
+
+            <div id="baslangic">
+                <div class="faq-item">
+                    <h3>Nasıl başlarım?</h3>
+                    <p>Ciral'i kullanmaya başlamak çok kolay:</p>
+                    <ul>
+                        <li><strong>1. Uygulamayı İndirin:</strong> App Store'dan Ciral'i indirin ve açın</li>
+                        <li><strong>2. Apple ile Giriş Yapın:</strong> Apple Sign In ile güvenli bir şekilde hesap oluşturun</li>
+                        <li><strong>3. İlk Alışkanlığınızı Oluşturun:</strong> "Başla" butonuna tıklayın ve ne tür bir alışkanlık kazanmak istediğinizi Mol.AI'a anlatın</li>
+                        <li><strong>4. AI Planınızı Alın:</strong> Yapay zeka sizin için kişiselleştirilmiş, adım adım bir plan oluşturacak</li>
+                        <li><strong>5. Takip Edin:</strong> Her gün adımlarınızı tamamlayın ve ilerlemenizi izleyin</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Mol.AI nedir ve nasıl çalışır?</h3>
+                    <p>Mol.AI, Ciral'in yapay zeka asistanıdır. OpenAI'nin GPT-4.1 teknolojisiyle çalışır ve size şu konularda yardımcı olur:</p>
+                    <ul>
+                        <li><strong>Kişiselleştirilmiş Planlar:</strong> Hedeflerinize uygun, bilimsel temelli alışkanlık planları oluşturur</li>
+                        <li><strong>Motivasyon Desteği:</strong> Alışkanlıklarınız hakkında sohbet edebilir, tavsiye alabilirsiniz</li>
+                        <li><strong>Adım Adım Rehberlik:</strong> Karmaşık hedefleri küçük, yönetilebilir adımlara böler</li>
+                    </ul>
+                    <p><strong>Not:</strong> Mol.AI profesyonel tıbbi, psikolojik veya yasal tavsiye yerine geçmez.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Verilerim güvende mi?</h3>
+                    <p>Evet! Gizliliğiniz bizim için çok önemli:</p>
+                    <ul>
+                        <li><strong>AB Veri Merkezi:</strong> Tüm verileriniz Avrupa Birliği'nde (Frankfurt, Almanya) saklanır</li>
+                        <li><strong>Şifreleme:</strong> Veriler hem aktarım hem de depolama sırasında şifrelenir</li>
+                        <li><strong>KVKK ve GDPR Uyumlu:</strong> Türk ve AB veri koruma yasalarına tam uyum</li>
+                        <li><strong>Sınırlı Erişim:</strong> Verilerinize yalnızca siz erişebilirsiniz</li>
+                        <li><strong>Otomatik Silme:</strong> Sohbet mesajları 90 gün sonra otomatik silinir</li>
+                    </ul>
+                    <p>Detaylı bilgi için <a href="privacy.html" style="color: var(--accent);">Gizlilik Politikası</a>'mızı okuyun.</p>
+                </div>
+            </div>
+
+            <div id="abonelik">
+                <div class="faq-item">
+                    <h3>Ücretsiz sürümde neler var?</h3>
+                    <p>Ücretsiz kullanıcılar aşağıdaki özelliklere erişebilir:</p>
+                    <ul>
+                        <li>En fazla <strong>3 alışkanlık</strong> oluşturabilir</li>
+                        <li>Günde <strong>3 AI plan</strong> oluşturma hakkı</li>
+                        <li>Günde <strong>10 Mol.AI sohbet</strong> mesajı</li>
+                        <li>Temel widget'lar ve bildirimler</li>
+                        <li>Cihazlar arası senkronizasyon</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Premium abonelik ne kadar ve neleri içeriyor?</h3>
+                    <p><strong>Türkiye Fiyatlandırması:</strong></p>
+                    <ul>
+                        <li><strong>Aylık:</strong> 79,99 TRY</li>
+                        <li><strong>Yıllık:</strong> 449,99 TRY (%53 tasarruf - ayda sadece 37,50 TRY)</li>
+                        <li><strong>Ömür Boyu:</strong> 1.499,99 TRY (tek seferlik ödeme)</li>
+                    </ul>
+                    <p><strong>Premium Özellikler:</strong></p>
+                    <ul>
+                        <li><strong>Sınırsız</strong> alışkanlık oluşturma</li>
+                        <li><strong>Sınırsız</strong> AI plan oluşturma</li>
+                        <li><strong>Sınırsız</strong> Mol.AI sohbet</li>
+                        <li>Gelecekteki premium özelliklere öncelikli erişim</li>
+                        <li>Reklamsız deneyim</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Aboneliğimi nasıl iptal ederim?</h3>
+                    <p>Abonelikler Apple tarafından yönetilir. İptal etmek için:</p>
+                    <ul>
+                        <li><strong>1.</strong> iPhone'unuzda <strong>Ayarlar</strong> uygulamasını açın</li>
+                        <li><strong>2.</strong> Üstteki <strong>adınıza</strong> dokunun</li>
+                        <li><strong>3.</strong> <strong>Abonelikler</strong>'i seçin</li>
+                        <li><strong>4.</strong> <strong>Ciral</strong>'yi bulun ve tıklayın</li>
+                        <li><strong>5.</strong> <strong>"Aboneliği İptal Et"</strong> seçeneğine tıklayın</li>
+                    </ul>
+                    <p><strong>Not:</strong> İptal ettiğinizde, mevcut ödeme döneminin sonuna kadar premium özelliklerden yararlanmaya devam edersiniz.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>İade alabilir miyim?</h3>
+                    <p>İade talepleri Apple tarafından değerlendirilir:</p>
+                    <ul>
+                        <li><strong>İade Talebi:</strong> <a href="https://reportaproblem.apple.com" target="_blank" style="color: var(--accent);">reportaproblem.apple.com</a> adresine gidin</li>
+                        <li><strong>Değerlendirme:</strong> Apple, talebinizi kendi iade politikasına göre değerlendirir</li>
+                        <li><strong>Süre:</strong> Genellikle satın alma tarihinden itibaren 14 gün içinde iade talep edebilirsiniz</li>
+                    </ul>
+                    <p>Biz doğrudan iade işlemi yapamayız çünkü tüm ödemeler Apple tarafından işlenir.</p>
+                </div>
+            </div>
+
+            <div id="teknik">
+                <div class="faq-item">
+                    <h3>Verilerim senkronize olmuyor</h3>
+                    <p>Senkronizasyon sorunları için şu adımları deneyin:</p>
+                    <ul>
+                        <li><strong>1. İnternet Bağlantısı:</strong> Kararlı bir Wi-Fi veya hücresel veri bağlantınız olduğundan emin olun</li>
+                        <li><strong>2. Giriş Kontrolü:</strong> Ayarlar'da Apple hesabınızla giriş yaptığınızı doğrulayın</li>
+                        <li><strong>3. Uygulamayı Yeniden Başlatın:</strong> Uygulamayı kapatıp tekrar açın</li>
+                        <li><strong>4. Cihazı Yeniden Başlatın:</strong> iPhone'unuzu yeniden başlatın</li>
+                        <li><strong>5. Güncelleme Kontrolü:</strong> App Store'da Ciral için güncelleme olup olmadığını kontrol edin</li>
+                    </ul>
+                    <p>Sorun devam ederse, destek@ciral.app adresine yazın.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>AI yanıt vermiyor veya hata alıyorum</h3>
+                    <p>AI özellikleriyle ilgili sorunlar için:</p>
+                    <ul>
+                        <li><strong>Günlük Limit:</strong> Ücretsiz kullanıcılar günde 3 plan ve 10 sohbet hakkına sahiptir. Limitinizi aşmış olabilirsiniz (sınır yarın gece yarısı sıfırlanır)</li>
+                        <li><strong>İnternet Bağlantısı:</strong> AI özellikleri internet bağlantısı gerektirir</li>
+                        <li><strong>Geçici Kesinti:</strong> OpenAI servisleri nadiren kesintiye uğrayabilir, birkaç dakika sonra tekrar deneyin</li>
+                        <li><strong>Uygulamayı Güncelleyin:</strong> En son sürümü kullandığınızdan emin olun</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Bildirimler gelmiyor</h3>
+                    <p>Bildirim sorunları için:</p>
+                    <ul>
+                        <li><strong>1. Uygulama İzinleri:</strong> Ayarlar > Ciral > Bildirimler'den bildirimlerin açık olduğunu doğrulayın</li>
+                        <li><strong>2. Sistem Ayarları:</strong> iPhone Ayarlar > Bildirimler > Ciral'de izinlerin verildiğini kontrol edin</li>
+                        <li><strong>3. Rahatsız Etmeyin Modu:</strong> "Rahatsız Etmeyin" modunun kapalı olduğundan emin olun</li>
+                        <li><strong>4. Bildirim Saatleri:</strong> Ciral Ayarlar'da bildirim zamanlarınızı kontrol edin</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Hesabımı ve tüm verilerimi silmek istiyorum</h3>
+                    <p>KVKK ve GDPR haklarınız kapsamında, verilerinizi tamamen silebilirsiniz:</p>
+                    <ul>
+                        <li><strong>1.</strong> Uygulamada <strong>Ayarlar</strong>'ı açın</li>
+                        <li><strong>2.</strong> <strong>Hesap Ayarları</strong>'na gidin</li>
+                        <li><strong>3.</strong> <strong>"Hesabı Sil"</strong> butonuna tıklayın</li>
+                        <li><strong>4.</strong> Onaylayın ve işlemi tamamlayın</li>
+                    </ul>
+                    <p><strong>Uyarı:</strong> Bu işlem geri alınamaz. Tüm alışkanlıklarınız, sohbet geçmişiniz ve hesap bilgileriniz 30 gün içinde kalıcı olarak silinecektir.</p>
+                    <p>Alternatif olarak, destek@ciral.app adresine e-posta göndererek de hesap silme talebinde bulunabilirsiniz.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Widget'lar görünmüyor veya güncellenmiyor</h3>
+                    <p>Widget sorunları için:</p>
+                    <ul>
+                        <li><strong>1.</strong> Widget'ı kaldırıp tekrar ekleyin (Home Screen'de widget'a uzun basın > Widget'ı Düzenle)</li>
+                        <li><strong>2.</strong> iPhone'unuzu yeniden başlatın</li>
+                        <li><strong>3.</strong> Ciral uygulamasını açın (widget'lar uygulamadan veri alır)</li>
+                        <li><strong>4.</strong> iOS sürümünüzü kontrol edin (en az iOS 16 gerekli)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <h3>Hangi cihazlarda çalışır?</h3>
+                <p><strong>Sistem Gereksinimleri:</strong></p>
+                <ul>
+                    <li><strong>Platform:</strong> iOS (iPhone)</li>
+                    <li><strong>Minimum Sürüm:</strong> iOS 17.0 veya üzeri</li>
+                    <li><strong>Widget'lar:</strong> iOS 17+ gerektirir</li>
+                    <li><strong>Apple Watch:</strong> Şu anda desteklenmiyor (gelecek güncellemelerde gelebilir)</li>
+                    <li><strong>iPad:</strong> Uyumlu ancak optimize edilmemiş (iPhone arayüzü kullanılır)</li>
+                </ul>
+            </div>
+
+            <div class="faq-item">
+                <h3>Dil desteği var mı?</h3>
+                <p>Ciral şu anda <strong>Türkçe</strong> dilinde sunulmaktadır. Mol.AI ise 15 dilde destek sağlar:</p>
+                <ul>
+                    <li>Türkçe, İngilizce, İspanyolca, Fransızca, Almanca, İtalyanca, Portekizce, Rusça, Japonca, Korece, Çince, Arapça, Hintçe, Hollandaca, İsveççe</li>
+                </ul>
+                <p>Dil tercihinizi Ayarlar > Dil'den değiştirebilirsiniz.</p>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2>Sorunuzu bulamadınız mı?</h2>
+            <p>Sorularınız, geri bildirimleriniz veya sorunlarınız için bizimle iletişime geçin. Size yardımcı olmak için buradayız.</p>
+            <a href="mailto:destek@ciral.app" class="contact-email">destek@ciral.app</a>
+            <div class="response-time">
+                <p><strong>Yanıt Süresi:</strong> Genellikle 24-48 saat içinde yanıt veriyoruz (hafta içi). KVKK veri silme talepleri 30 gün içinde işleme alınır.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-section">
+                <h4>Ciral</h4>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">AI destekli alışkanlık takip uygulaması.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Yasal</h4>
+                <a href="privacy.html">Gizlilik Politikası</a>
+                <a href="terms.html">Kullanım Koşulları</a>
+                <a href="support.html">Destek</a>
+            </div>
+            <div class="footer-section">
+                <h4>İletişim</h4>
+                <a href="mailto:destek@ciral.app">destek@ciral.app</a>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 Cc. Tüm hakları saklıdır. | Brock tarafından geliştirilmiştir.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

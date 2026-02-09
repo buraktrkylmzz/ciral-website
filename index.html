@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ciral — Yapay zeka destekli kisisel aliskanlik kocu. Kucuk adimlarla buyuk degisimler.">
+<meta name="theme-color" content="#FFE5DF">
+<title>Ciral — AI Aliskanlik Kocu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS — App's actual color palette
+   ═══════════════════════════════════════ */
+:root {
+  /* App gradient (light mode) */
+  --bg-warm: #FFE5DF;
+  --bg-cream: #FFF8F6;
+  --bg-white: #FFFFFF;
+
+  /* Brand */
+  --brand-red: #D32F2F;
+  --brand-red-dark: #B71C1C;
+  --brand-coral: #FF6B6B;
+  --brand-flame: #FF8A65;
+
+  /* Surfaces */
+  --card-bg: rgba(255,255,255,0.55);
+  --card-border: rgba(0,0,0,0.06);
+  --card-shadow: rgba(0,0,0,0.04);
+  --glass-bg: rgba(255,255,255,0.7);
+  --glass-border: rgba(255,255,255,0.8);
+
+  /* Text */
+  --text-primary: #1A1A1A;
+  --text-secondary: #5A5A5A;
+  --text-tertiary: #9A9A9A;
+
+  /* Typography — Clash Display (headlines) + Satoshi (body, SF Pro-like) */
+  --font-display: 'Clash Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg-cream) 30%, var(--bg-white) 100%);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+::selection {
+  background: var(--brand-red);
+  color: white;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ═══════════════════════════════════════
+   REVEAL SYSTEM
+   ═══════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
+}
+.nav.scrolled {
+  background: rgba(255,248,246,0.8);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-logo-img {
+  width: 32px;
+  height: 32px;
+}
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--brand-red);
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+.nav-links a {
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--brand-red);
+  transition: width 0.3s var(--ease-out-expo);
+}
+.nav-links a:hover { color: var(--text-primary); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  border-radius: 100px;
+  background: var(--brand-red);
+  color: white;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-body);
+}
+.nav-cta:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(211,47,47,0.25);
+}
+
+.nav-mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-mobile-toggle span {
+  width: 22px;
+  height: 1.5px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-mobile-toggle { display: flex; }
+}
+
+/* ═══════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem clamp(1.5rem, 5vw, 4rem) 4rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-warm), var(--bg-cream));
+}
+
+/* Soft radial glow */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(211,47,47,0.08) 0%, rgba(255,107,107,0.04) 40%, transparent 70%);
+  pointer-events: none;
+  animation: ambientPulse 8s ease-in-out infinite;
+}
+
+@keyframes ambientPulse {
+  0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
+/* Floating soft particles */
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat linear infinite;
+}
+.particle.red { background: rgba(211,47,47,0.15); }
+.particle.pink { background: rgba(255,107,107,0.12); }
+.particle.warm { background: rgba(255,138,101,0.1); }
+
+@keyframes particleFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  15% { opacity: 1; transform: scale(1); }
+  85% { opacity: 0.3; }
+  100% { opacity: 0; transform: translateY(-100vh) scale(0.5); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 900px;
+}
+
+.hero-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  animation: logoSpin 20s linear infinite;
+  filter: drop-shadow(0 4px 12px rgba(211,47,47,0.15));
+}
+@keyframes logoSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(211,47,47,0.1);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; box-shadow: 0 0 8px rgba(211,47,47,0.4); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  color: var(--brand-red);
+}
+
+.hero-tagline {
+  font-family: var(--font-body);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.hero-subtitle {
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  font-weight: 300;
+  color: var(--text-tertiary);
+  max-width: 520px;
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2rem;
+  border-radius: 100px;
+  background: var(--brand-red);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 30px rgba(211,47,47,0.25);
+}
+.btn-primary svg { width: 18px; height: 18px; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.6);
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: var(--font-body);
+  backdrop-filter: blur(10px);
+}
+.btn-secondary:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.8);
+  border-color: rgba(0,0,0,0.12);
+}
+
+/* ═══════════════════════════════════════
+   iPHONE 16 PRO MOCKUP
+   ═══════════════════════════════════════ */
+.hero-phone {
+  position: relative;
+  margin-top: 4rem;
+  perspective: 1200px;
+}
+
+.iphone-wrapper {
+  position: relative;
+  animation: phoneFloat 6s ease-in-out infinite;
+}
+
+@keyframes phoneFloat {
+  0%, 100% { transform: translateY(0) rotateX(2deg) rotateY(-1deg); }
+  33% { transform: translateY(-12px) rotateX(0deg) rotateY(1deg); }
+  66% { transform: translateY(-6px) rotateX(-1deg) rotateY(0deg); }
+}
+
+/* Titanium frame */
+.iphone-frame {
+  width: 292px;
+  height: 598px;
+  position: relative;
+  border-radius: 52px;
+  background: linear-gradient(145deg, #B8B8BC 0%, #8E8E93 30%, #A0A0A5 60%, #C8C8CC 100%);
+  padding: 2px;
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.18),
+    0 15px 40px rgba(0,0,0,0.1),
+    0 0 0 0.5px rgba(0,0,0,0.3),
+    inset 0 0.5px 0 rgba(255,255,255,0.4),
+    inset 0 -0.5px 0 rgba(0,0,0,0.1);
+}
+
+/* Inner bezel */
+.iphone-bezel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  background: #1A1A1E;
+  padding: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Screen */
+.iphone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 47px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(180deg, #FFE5DF, #FFF8F6);
+}
+
+/* Dynamic Island */
+.dynamic-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 36px;
+  background: #1A1A1E;
+  border-radius: 20px;
+  z-index: 10;
+  box-shadow: 0 0 0 0.5px rgba(0,0,0,0.5);
+}
+.dynamic-island::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #2A2A35 0%, #1A1A1E 100%);
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.05);
+}
+
+/* iOS Status Bar */
+.ios-statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px 0;
+  height: 54px;
+  position: relative;
+  z-index: 5;
+}
+.ios-statusbar-time {
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1A1A1A;
+  letter-spacing: 0.2px;
+}
+.ios-statusbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.ios-statusbar-icons svg {
+  display: block;
+}
+
+/* Side buttons */
+.iphone-btn-power {
+  position: absolute;
+  right: -2px;
+  top: 152px;
+  width: 2.5px;
+  height: 76px;
+  background: linear-gradient(180deg, #A0A0A5, #8E8E93, #A0A0A5);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 1px 0 2px rgba(0,0,0,0.15);
+}
+.iphone-btn-vol-up {
+  position: absolute;
+  left: -2px;
+  top: 132px;
+  width: 2.5px;
+  height: 42px;
+  background: linear-gradient(180deg, #A0A0A5, #8E8E93, #A0A0A5);
+  border-radius: 2px 0 0 2px;
+  box-shadow: -1px 0 2px rgba(0,0,0,0.15);
+}
+.iphone-btn-vol-down {
+  position: absolute;
+  left: -2px;
+  top: 184px;
+  width: 2.5px;
+  height: 42px;
+  background: linear-gradient(180deg, #A0A0A5, #8E8E93, #A0A0A5);
+  border-radius: 2px 0 0 2px;
+  box-shadow: -1px 0 2px rgba(0,0,0,0.15);
+}
+.iphone-btn-action {
+  position: absolute;
+  left: -2px;
+  top: 100px;
+  width: 2.5px;
+  height: 22px;
+  background: linear-gradient(180deg, #A0A0A5, #8E8E93, #A0A0A5);
+  border-radius: 2px 0 0 2px;
+  box-shadow: -1px 0 2px rgba(0,0,0,0.15);
+}
+
+/* App UI inside the phone */
+.app-ui {
+  padding: 0 12px 12px;
+  height: calc(100% - 54px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nav bar area */
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 12px;
+}
+.app-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.app-nav-logo {
+  width: 26px;
+  height: 26px;
+}
+.app-nav-title {
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: -0.3px;
+}
+.app-nav-right {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app-nav-right svg {
+  width: 14px;
+  height: 14px;
+  color: #8E8E93;
+}
+
+/* Date selector row */
+.app-date-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+.app-date-item {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+.app-date-item.active {
+  background: var(--brand-red);
+}
+.app-date-day {
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  color: #8E8E93;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.app-date-item.active .app-date-day {
+  color: rgba(255,255,255,0.8);
+}
+.app-date-num {
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-top: 2px;
+}
+.app-date-item.active .app-date-num {
+  color: white;
+}
+
+/* Habit cards */
+.app-cards {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.app-habit-card {
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 16px;
+  padding: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.04),
+    0 4px 12px rgba(0,0,0,0.02),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-habit-emoji {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.app-habit-emoji.walk { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
+.app-habit-emoji.read { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+.app-habit-emoji.wake { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+
+.app-habit-info {
+  flex: 1;
+  min-width: 0;
+}
+.app-habit-name {
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 2px;
+}
+.app-habit-step {
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+  font-size: 10.5px;
+  color: #8E8E93;
+  line-height: 1.3;
+}
+.app-habit-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+.app-habit-streak {
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--brand-red);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.app-habit-progress-bar {
+  flex: 1;
+  height: 3px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-left: 4px;
+}
+.app-habit-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand-red), var(--brand-coral));
+}
+
+.app-habit-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.app-habit-check.done {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+}
+.app-habit-check.done svg {
+  display: block;
+}
+.app-habit-check svg {
+  display: none;
+  width: 14px;
+  height: 14px;
+  color: white;
+}
+
+/* Tab bar */
+.app-tabbar {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0 4px;
+  border-top: 0.5px solid rgba(0,0,0,0.06);
+  background: rgba(255,248,246,0.5);
+}
+.app-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  color: #8E8E93;
+}
+.app-tab.active {
+  color: var(--brand-red);
+}
+.app-tab svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Home indicator */
+.app-home-indicator {
+  width: 134px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.18);
+  margin: 8px auto 4px;
+}
+
+/* Glow effect behind phone */
+.iphone-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  height: 650px;
+  background: radial-gradient(ellipse, rgba(211,47,47,0.12) 0%, rgba(255,107,107,0.06) 40%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Reflection line */
+.iphone-frame::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 60%;
+  height: 45%;
+  border-radius: 48px 20px 50% 48px;
+  background: linear-gradient(160deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 20;
+}
+
+@media (max-width: 480px) {
+  .iphone-frame {
+    width: 250px;
+    height: 512px;
+  }
+  .iphone-frame::after { display: none; }
+  .iphone-glow { width: 300px; height: 560px; }
+}
+
+/* ═══════════════════════════════════════
+   SECTION COMMON
+   ═══════════════════════════════════════ */
+.section {
+  padding: clamp(5rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+  position: relative;
+}
+
+.section-warm {
+  background: linear-gradient(180deg, var(--bg-cream), var(--bg-white));
+}
+.section-white {
+  background: var(--bg-white);
+}
+.section-soft {
+  background: linear-gradient(180deg, var(--bg-white), #FFF5F2, var(--bg-white));
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 700px;
+  color: var(--text-primary);
+}
+
+.section-subtitle {
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin-top: 1.25rem;
+  line-height: 1.7;
+}
+
+.section-center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ═══════════════════════════════════════
+   FEATURES
+   ═══════════════════════════════════════ */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  max-width: 960px;
+  margin: 4rem auto 0;
+}
+
+@media (max-width: 640px) {
+  .features-grid { grid-template-columns: 1fr; }
+}
+
+.feature-card {
+  background: var(--card-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 12px var(--card-shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(211,47,47,0.08), 0 4px 16px var(--card-shadow);
+}
+
+.feature-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(135deg, rgba(211,47,47,0.1), rgba(255,107,107,0.06));
+  border: 1px solid rgba(211,47,47,0.08);
+}
+
+.feature-title {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.feature-desc {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════
+   HOW IT WORKS
+   ═══════════════════════════════════════ */
+.steps-container {
+  max-width: 700px;
+  margin: 5rem auto 0;
+  position: relative;
+}
+
+.steps-line {
+  position: absolute;
+  left: 28px;
+  top: 28px;
+  bottom: 28px;
+  width: 2px;
+  background: rgba(211,47,47,0.1);
+  overflow: hidden;
+}
+.steps-line-fill {
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, var(--brand-red), var(--brand-coral), var(--brand-flame));
+  border-radius: 2px;
+  transition: height 1.5s var(--ease-out-expo);
+}
+.steps-container.line-animated .steps-line-fill {
+  height: 100%;
+}
+
+.step {
+  display: flex;
+  gap: 1.75rem;
+  align-items: flex-start;
+  padding-bottom: 3rem;
+  position: relative;
+}
+.step:last-child { padding-bottom: 0; }
+
+.step-number {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.7);
+  border: 2px solid rgba(211,47,47,0.1);
+  position: relative;
+  z-index: 2;
+  transition: border-color 0.5s, box-shadow 0.5s, color 0.5s;
+  backdrop-filter: blur(10px);
+}
+.step.visible .step-number {
+  border-color: var(--brand-red);
+  color: var(--brand-red);
+  box-shadow: 0 0 20px rgba(211,47,47,0.1);
+}
+
+.step-content { padding-top: 0.75rem; }
+
+.step-title {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.step-desc {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════
+   STATS
+   ═══════════════════════════════════════ */
+.stats {
+  background: rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(0,0,0,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  color: var(--brand-red);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════
+   PRICING
+   ═══════════════════════════════════════ */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 960px;
+  margin: 4rem auto 0;
+  align-items: stretch;
+}
+
+@media (max-width: 768px) {
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+}
+
+.pricing-card {
+  background: var(--card-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s;
+  position: relative;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 12px var(--card-shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.pricing-card:hover { transform: translateY(-6px); }
+
+.pricing-card.featured {
+  background: rgba(255,255,255,0.75);
+  border-color: rgba(211,47,47,0.15);
+  box-shadow: 0 8px 40px rgba(211,47,47,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+  transform: scale(1.03);
+}
+.pricing-card.featured:hover { transform: scale(1.03) translateY(-6px); }
+
+.pricing-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.3rem 1rem;
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pricing-badge.popular {
+  background: var(--brand-red);
+  color: white;
+}
+.pricing-badge.lifetime-badge {
+  background: linear-gradient(135deg, #FFD54F, #FFA000);
+  color: #1a1a1a;
+}
+
+.pricing-plan {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+.pricing-price {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+.pricing-price span {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+}
+.pricing-period {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1.5rem;
+}
+.pricing-features {
+  list-style: none;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+.pricing-features li {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding: 0.4rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.pricing-features li::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 50%;
+  background: rgba(211,47,47,0.08);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23D32F2F' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.pricing-cta {
+  width: 100%;
+  padding: 0.875rem;
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.pricing-cta.primary {
+  background: var(--brand-red);
+  color: white;
+}
+.pricing-cta.primary:hover {
+  box-shadow: 0 8px 24px rgba(211,47,47,0.25);
+  transform: translateY(-1px);
+}
+.pricing-cta.secondary {
+  background: rgba(255,255,255,0.5);
+  color: var(--text-primary);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.pricing-cta.secondary:hover {
+  background: rgba(255,255,255,0.8);
+}
+
+.pricing-free {
+  text-align: center;
+  margin-top: 2.5rem;
+  padding: 1.25rem 2rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(0,0,0,0.05);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pricing-free-title { font-weight: 500; margin-bottom: 0.25rem; }
+.pricing-free-desc { font-size: 0.875rem; color: var(--text-secondary); }
+
+/* ═══════════════════════════════════════
+   TESTIMONIALS
+   ═══════════════════════════════════════ */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 1000px;
+  margin: 4rem auto 0;
+}
+@media (max-width: 768px) {
+  .testimonials-grid { grid-template-columns: 1fr; max-width: 440px; }
+}
+
+.testimonial-card {
+  background: var(--card-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.75rem;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 12px var(--card-shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.testimonial-stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 1rem;
+  color: #F59E0B;
+  font-size: 0.875rem;
+}
+.testimonial-text {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+  font-style: italic;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.testimonial-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-red), var(--brand-coral));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+.testimonial-name { font-size: 0.8125rem; font-weight: 500; }
+.testimonial-role { font-size: 0.75rem; color: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════
+   FINAL CTA
+   ═══════════════════════════════════════ */
+.cta-section {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-white), var(--bg-warm));
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.cta-title-accent {
+  color: var(--brand-red);
+}
+.cta-subtitle {
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════ */
+.footer {
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding: 3rem clamp(1.5rem, 5vw, 4rem);
+  background: var(--bg-warm);
+}
+.footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 3rem;
+}
+@media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+@media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
+
+.footer-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.footer-brand-logo { width: 28px; height: 28px; }
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  color: var(--brand-red);
+}
+.footer-brand-desc {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
+.footer-col-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.footer-links a {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--brand-red); }
+
+.footer-bottom {
+  max-width: 1000px;
+  margin: 2rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-copy { font-size: 0.75rem; color: var(--text-tertiary); }
+.footer-socials { display: flex; gap: 0.75rem; }
+.footer-social {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  transition: all 0.3s;
+}
+.footer-social:hover {
+  color: var(--brand-red);
+  transform: translateY(-2px);
+  border-color: rgba(211,47,47,0.15);
+}
+
+/* ═══════════════════════════════════════
+   SCROLL PROGRESS
+   ═══════════════════════════════════════ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brand-red), var(--brand-coral));
+  z-index: 200;
+  width: 0%;
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-brand">
+    <img src="logo.png" alt="Ciral" class="nav-logo-img">
+    <span class="nav-logo-text">Ciral</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Ozellikler</a></li>
+    <li><a href="#how">Nasil Calisir</a></li>
+    <li><a href="#pricing">Fiyatlar</a></li>
+    <li><a href="#reviews">Yorumlar</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Indir</button>
+  <div class="nav-mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ════════════ HERO ════════════ -->
+<section class="hero" id="hero">
+  <div class="particles" id="particles"></div>
+  <div class="hero-content">
+    <img src="logo.png" alt="Ciral Logo" class="hero-logo reveal">
+    <div class="hero-badge reveal reveal-delay-1">
+      <span class="hero-badge-dot"></span>
+      Yapay Zeka Destekli
+    </div>
+    <h1 class="hero-title reveal reveal-delay-2">Ciral</h1>
+    <p class="hero-tagline reveal reveal-delay-3">Aliskanlik yolculugunda yapay zeka rehberin</p>
+    <p class="hero-subtitle reveal reveal-delay-4">Kucuk adimlarla buyuk degisimler. AI destekli kisisel aliskanlik kocun ile her gun sadece bir adim at.</p>
+    <div class="hero-actions reveal reveal-delay-5">
+      <a href="#" class="btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        App Store'dan Indir
+      </a>
+      <a href="#how" class="btn-secondary">Nasil Calisir?</a>
+    </div>
+
+    <div class="hero-phone reveal" style="transition-delay:0.6s">
+      <div class="iphone-glow"></div>
+      <div class="iphone-wrapper">
+        <div class="iphone-frame">
+          <!-- Side buttons -->
+          <div class="iphone-btn-power"></div>
+          <div class="iphone-btn-action"></div>
+          <div class="iphone-btn-vol-up"></div>
+          <div class="iphone-btn-vol-down"></div>
+
+          <div class="iphone-bezel">
+            <div class="iphone-screen">
+              <!-- Dynamic Island -->
+              <div class="dynamic-island"></div>
+
+              <!-- iOS Status Bar -->
+              <div class="ios-statusbar">
+                <span class="ios-statusbar-time">9:41</span>
+                <div class="ios-statusbar-icons">
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="#1A1A1A"/><rect x="4.5" y="1.5" width="3" height="10.5" rx="1" fill="#1A1A1A"/><rect x="9" y="0" width="3" height="12" rx="1" fill="#1A1A1A"/><rect x="13.5" y="3" width="2.5" height="9" rx="0.8" fill="rgba(26,26,26,0.25)"/></svg>
+                  <svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 3.5C9.4 3.5 11.1 4.2 12.4 5.4L13.8 4C12.1 2.4 9.9 1.5 7.5 1.5S2.9 2.4 1.2 4L2.6 5.4C3.9 4.2 5.6 3.5 7.5 3.5Z" fill="#1A1A1A"/><path d="M7.5 7C8.6 7 9.6 7.4 10.3 8L11.7 6.6C10.6 5.6 9.1 5 7.5 5S4.4 5.6 3.3 6.6L4.7 8C5.4 7.4 6.4 7 7.5 7Z" fill="#1A1A1A"/><circle cx="7.5" cy="10" r="1.5" fill="#1A1A1A"/></svg>
+                  <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="#1A1A1A" stroke-width="1"/><rect x="1.5" y="2.5" width="17" height="7" rx="1.5" fill="#1A1A1A"/><path d="M23 4.5V7.5C23.8 7.2 24.3 6.5 24.3 6S23.8 4.8 23 4.5Z" fill="#1A1A1A"/></svg>
+                </div>
+              </div>
+
+              <!-- App UI -->
+              <div class="app-ui">
+                <!-- Navigation -->
+                <div class="app-nav">
+                  <div class="app-nav-left">
+                    <img src="logo.png" alt="" class="app-nav-logo">
+                    <span class="app-nav-title">Aliskanliklarim</span>
+                  </div>
+                  <div class="app-nav-right">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </div>
+                </div>
+
+                <!-- Date selector -->
+                <div class="app-date-row">
+                  <div class="app-date-item">
+                    <div class="app-date-day">Pzt</div>
+                    <div class="app-date-num">5</div>
+                  </div>
+                  <div class="app-date-item">
+                    <div class="app-date-day">Sal</div>
+                    <div class="app-date-num">6</div>
+                  </div>
+                  <div class="app-date-item">
+                    <div class="app-date-day">Car</div>
+                    <div class="app-date-num">7</div>
+                  </div>
+                  <div class="app-date-item active">
+                    <div class="app-date-day">Per</div>
+                    <div class="app-date-num">8</div>
+                  </div>
+                  <div class="app-date-item">
+                    <div class="app-date-day">Cum</div>
+                    <div class="app-date-num">9</div>
+                  </div>
+                  <div class="app-date-item">
+                    <div class="app-date-day">Cmt</div>
+                    <div class="app-date-num">10</div>
+                  </div>
+                  <div class="app-date-item">
+                    <div class="app-date-day">Paz</div>
+                    <div class="app-date-num">11</div>
+                  </div>
+                </div>
+
+                <!-- Habit cards -->
+                <div class="app-cards">
+                  <div class="app-habit-card">
+                    <div class="app-habit-emoji walk">&#x1F6B6;</div>
+                    <div class="app-habit-info">
+                      <div class="app-habit-name">Her gun 20 dk yuruyus</div>
+                      <div class="app-habit-step">Kapinin onune ayakkabi koy</div>
+                      <div class="app-habit-meta">
+                        <span class="app-habit-streak">&#x1F525; 7 gun</span>
+                        <div class="app-habit-progress-bar">
+                          <div class="app-habit-progress-fill" style="width:66%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="app-habit-check done">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                  </div>
+
+                  <div class="app-habit-card">
+                    <div class="app-habit-emoji read">&#x1F4D6;</div>
+                    <div class="app-habit-info">
+                      <div class="app-habit-name">Kitap okuma</div>
+                      <div class="app-habit-step">5 sayfa oku</div>
+                      <div class="app-habit-meta">
+                        <span class="app-habit-streak">&#x1F525; 3 gun</span>
+                        <div class="app-habit-progress-bar">
+                          <div class="app-habit-progress-fill" style="width:33%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="app-habit-check"></div>
+                  </div>
+
+                  <div class="app-habit-card">
+                    <div class="app-habit-emoji wake">&#x2600;&#xFE0F;</div>
+                    <div class="app-habit-info">
+                      <div class="app-habit-name">Erken kalkma</div>
+                      <div class="app-habit-step">Alarmi 10 dk erkene al</div>
+                      <div class="app-habit-meta">
+                        <span class="app-habit-streak">&#x2728; Yeni</span>
+                        <div class="app-habit-progress-bar">
+                          <div class="app-habit-progress-fill" style="width:10%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="app-habit-check"></div>
+                  </div>
+                </div>
+
+                <!-- Tab bar -->
+                <div class="app-tabbar">
+                  <div class="app-tab">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    Basla
+                  </div>
+                  <div class="app-tab active">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    Takip
+                  </div>
+                  <div class="app-tab">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    Mol.AI
+                  </div>
+                  <div class="app-tab">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                    Ayarlar
+                  </div>
+                </div>
+
+                <!-- Home indicator -->
+                <div class="app-home-indicator"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FEATURES ════════════ -->
+<section class="section section-white section-center" id="features">
+  <div class="section-label reveal">Ozellikler</div>
+  <h2 class="section-title reveal reveal-delay-1">Aliskanlik kurmak hic bu kadar kolay olmamisti</h2>
+  <p class="section-subtitle reveal reveal-delay-2">Davranis bilimi ve yapay zekayi birlestirerek, sana ozel mikro adimlarla kalici aliskanliklar olustur.</p>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">&#x1F9E0;</div>
+      <div class="feature-title">AI Plan Olusturucu</div>
+      <div class="feature-desc">Aliskanligini yaz, yapay zeka sana mikro adimlardan olusan kisisel bir plan olustursun. Davranis bilimi temelli, kademeli zorluk egrisi.</div>
+    </div>
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon">&#x1F4AC;</div>
+      <div class="feature-title">Mol.AI &#8212; Aliskanlik Arkadasin</div>
+      <div class="feature-desc">Motivasyon dustugunde, zorlandiginda ya da sadece konusmak istediginde yaninda. Kisisel aliskanlik kocun her zaman hazir.</div>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon">&#x1F525;</div>
+      <div class="feature-title">Akilli Takip</div>
+      <div class="feature-desc">Streak sayaci, gunluk adimlar, ilerleme takibi. Bugun senden ne beklendigini her zaman bil. Basit, odakli, surdurulebilir.</div>
+    </div>
+    <div class="feature-card reveal reveal-delay-3">
+      <div class="feature-icon">&#x1F4F1;</div>
+      <div class="feature-title">Widget'lar</div>
+      <div class="feature-desc">Ana ekranindan ve kilit ekranindan aliskanliklarini takip et. Tek dokunusla tamamla. Uygulama acmana bile gerek yok.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ HOW IT WORKS ════════════ -->
+<section class="section section-soft section-center" id="how">
+  <div class="section-label reveal">Nasil Calisir</div>
+  <h2 class="section-title reveal reveal-delay-1">Dort adimda aliskanlik devrimi</h2>
+  <p class="section-subtitle reveal reveal-delay-2">Karmasik hedeflerini kucuk, yapilabilir adimlara donustur.</p>
+  <div class="steps-container" id="stepsContainer">
+    <div class="steps-line"><div class="steps-line-fill"></div></div>
+    <div class="step reveal">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <div class="step-title">Aliskanligini Yaz</div>
+        <div class="step-desc">Edinmek istedigin aliskanligi tek cumleyle anlat. "Her gun 20 dakika yuruyus yapmak istiyorum" gibi basit bir cumle yeterli.</div>
+      </div>
+    </div>
+    <div class="step reveal reveal-delay-1">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <div class="step-title">AI Plan Olustursun</div>
+        <div class="step-desc">GPT-4 destekli motor, sana ozel mikro adimlar tasarlar. 2 dakikayla basla, kademeli olarak zorlugu artir.</div>
+      </div>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <div class="step-title">Gunluk Adimini Yap</div>
+        <div class="step-desc">Her gun sadece bir kucuk adim. "Kapinin onune ayakkabi koy" kadar basit. Surdurulebilir, motivasyon gerektirmeyen adimlar.</div>
+      </div>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-number">4</div>
+      <div class="step-content">
+        <div class="step-title">Ilerlemeni Gor</div>
+        <div class="step-desc">Streak'in buyusun, Mol seninle kutlasin. Widget'lardan takip et, bildirimlerle hatirlat.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ STATS ════════════ -->
+<section class="section stats section-center">
+  <div class="stats-grid">
+    <div class="reveal">
+      <div class="stat-number" data-target="10000" data-suffix="+">0</div>
+      <div class="stat-label">Olusturulan Plan</div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="stat-number" data-target="94" data-suffix="%">0</div>
+      <div class="stat-label">Streak Devam Orani</div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <div class="stat-number" data-target="4.9" data-suffix="" data-decimal="true">0</div>
+      <div class="stat-label">App Store Puani</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ PRICING ════════════ -->
+<section class="section section-white section-center" id="pricing">
+  <div class="section-label reveal">Fiyatlar</div>
+  <h2 class="section-title reveal reveal-delay-1">Yolculuguna uygun plani sec</h2>
+  <p class="section-subtitle reveal reveal-delay-2">Ucretsiz basla, istedigin zaman yukselt. Taahhut yok.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="pricing-plan">Aylik</div>
+      <div class="pricing-price">&#x20BA;79<span>.99</span></div>
+      <div class="pricing-period">/ ay</div>
+      <ul class="pricing-features">
+        <li>Sinirsiz aliskanlik</li>
+        <li>Sinirsiz AI plan</li>
+        <li>100 Mol.AI mesaj/gun</li>
+        <li>Oncelikli destek</li>
+      </ul>
+      <button class="pricing-cta secondary">Premium'a Gec</button>
+    </div>
+    <div class="pricing-card featured reveal reveal-delay-1">
+      <div class="pricing-badge popular">EN POPULER</div>
+      <div class="pricing-plan">Yillik</div>
+      <div class="pricing-price">&#x20BA;449<span>.99</span></div>
+      <div class="pricing-period">/ yil &mdash; aylik &#x20BA;37.50</div>
+      <ul class="pricing-features">
+        <li>Tum aylik ozellikler</li>
+        <li>%47 tasarruf</li>
+        <li>7 gun ucretsiz deneme</li>
+        <li>Oncelikli AI erisimi</li>
+      </ul>
+      <button class="pricing-cta primary">7 Gun Ucretsiz Dene</button>
+    </div>
+    <div class="pricing-card reveal reveal-delay-2">
+      <div class="pricing-badge lifetime-badge">TEK SEFERLIK</div>
+      <div class="pricing-plan">Omur Boyu</div>
+      <div class="pricing-price">&#x20BA;1,499<span>.99</span></div>
+      <div class="pricing-period">tek seferlik odeme</div>
+      <ul class="pricing-features">
+        <li>Tum premium ozellikler</li>
+        <li>Sonsuza kadar erisim</li>
+        <li>Gelecek guncellemeler dahil</li>
+        <li>Oncelikli destek</li>
+      </ul>
+      <button class="pricing-cta secondary">Satin Al</button>
+    </div>
+  </div>
+  <div class="pricing-free reveal">
+    <div class="pricing-free-title">Ucretsiz Plan</div>
+    <div class="pricing-free-desc">1 aliskanlik, 3 plan/gun, 10 mesaj/gun &#8212; hemen basla, kart gerekmez.</div>
+  </div>
+</section>
+
+<!-- ════════════ TESTIMONIALS ════════════ -->
+<section class="section section-soft section-center" id="reviews">
+  <div class="section-label reveal">Kullanici Yorumlari</div>
+  <h2 class="section-title reveal reveal-delay-1">Binlerce kullanici aliskanliklarini Ciral ile donusturuyor</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+      <div class="testimonial-text">"Yillarca spor aliskanligini oturtamadim. Ciral'in mikro adimlari sayesinde 3 haftadir her gun hareket ediyorum."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">EA</div>
+        <div>
+          <div class="testimonial-name">Elif A.</div>
+          <div class="testimonial-role">21 gunluk streak</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="testimonial-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+      <div class="testimonial-text">"Mol.AI gercekten anlayan bir arkadas gibi. Motivasyonum dustugunde onun mesajlari beni tekrar yola cikariyor."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">BK</div>
+        <div>
+          <div class="testimonial-name">Burak K.</div>
+          <div class="testimonial-role">45 gunluk streak</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="testimonial-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+      <div class="testimonial-text">"Widget sayesinde telefonuma her baktigimda bugunku adimimi goruyorum. Basit ama cok etkili bir uygulama."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">ZD</div>
+        <div>
+          <div class="testimonial-name">Zeynep D.</div>
+          <div class="testimonial-role">30 gunluk streak</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FINAL CTA ════════════ -->
+<section class="section cta-section section-center">
+  <div class="cta-title reveal">Bugun baslayan tek bir adim,<br><span class="cta-title-accent">yarin seni degistirir.</span></div>
+  <div class="cta-subtitle reveal reveal-delay-1">Ucretsiz indir, ilk planini olustur. Kart bilgisi gerekmez.</div>
+  <div class="reveal reveal-delay-2">
+    <a href="#" class="btn-primary" style="font-size:1.0625rem;padding:1rem 2.5rem;">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      App Store'dan Indir
+    </a>
+  </div>
+</section>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-row">
+        <img src="logo.png" alt="Ciral" class="footer-brand-logo">
+        <span class="footer-brand-name">Ciral</span>
+      </div>
+      <div class="footer-brand-desc">Yapay zeka destekli aliskanlik takip uygulamasi.<br>Kucuk adimlarla buyuk degisimler.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Urun</div>
+      <ul class="footer-links">
+        <li><a href="#features">Ozellikler</a></li>
+        <li><a href="#pricing">Fiyatlar</a></li>
+        <li><a href="#how">Nasil Calisir</a></li>
+        <li><a href="#reviews">Yorumlar</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Yasal</div>
+      <ul class="footer-links">
+        <li><a href="privacy.html">Gizlilik Politikasi</a></li>
+        <li><a href="terms.html">Kullanim Kosullari</a></li>
+        <li><a href="support.html">Destek</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Iletisim</div>
+      <ul class="footer-links">
+        <li><a href="mailto:destek@ciral.app">destek@ciral.app</a></li>
+        <li><a href="support.html">SSS</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 Ciral. Tum haklari saklidir.</div>
+    <div class="footer-socials">
+      <a href="#" class="footer-social" aria-label="Twitter">&#x1D54F;</a>
+      <a href="#" class="footer-social" aria-label="Instagram">&#x1D540;</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  /* Particles */
+  const particlesEl = document.getElementById('particles');
+  const types = ['red','pink','warm'];
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle ' + types[i % 3];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = '-10px';
+    p.style.animationDuration = (8 + Math.random() * 12) + 's';
+    p.style.animationDelay = (Math.random() * 15) + 's';
+    const size = 3 + Math.random() * 5;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    particlesEl.appendChild(p);
+  }
+
+  /* Scroll progress */
+  const scrollBar = document.getElementById('scrollProgress');
+
+  /* Nav */
+  const nav = document.getElementById('nav');
+
+  /* Intersection Observer — reveals */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  /* Steps line */
+  const stepsC = document.getElementById('stepsContainer');
+  const stepsObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('line-animated'); stepsObs.unobserve(e.target); } });
+  }, { threshold: 0.3 });
+  if (stepsC) stepsObs.observe(stepsC);
+
+  /* Count-up stats */
+  const statNums = document.querySelectorAll('.stat-number[data-target]');
+  const statsObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseFloat(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      const dec = el.dataset.decimal === 'true';
+      const start = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / 2000, 1);
+        const eased = 1 - Math.pow(1 - p, 4);
+        el.textContent = (dec ? (eased * target).toFixed(1) : Math.floor(eased * target).toLocaleString('tr-TR')) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      statsObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  statNums.forEach(el => statsObs.observe(el));
+
+  /* Scroll listener */
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        scrollBar.style.width = (window.scrollY / h * 100) + '%';
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* Smooth anchor */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
